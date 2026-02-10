@@ -3,8 +3,8 @@ import { View, StyleSheet } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 
 // Internal Component Imports
-import AppSplashScreen from './AppSplashScreen'; 
-import JobDashboard from './jobdashboard'; 
+import AppSplashScreen from './src/components/AppSplashScreen'; 
+import JobDashboard from './src/screens/provider/jobdashboard'; 
 
 // Keep the native splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
