@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "lawnmower-app",
-    "slug": "lawnmower-app",
+    "name": "LawnTamers",
+    "slug": "LawnTamers",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-logo.png",
+      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#020617"
+      "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true

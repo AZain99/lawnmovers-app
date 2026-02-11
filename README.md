@@ -1,2 +1,0 @@
-# lawnmovers-app
-lawnmovers-app
