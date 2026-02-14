@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="background">#FFFFFF</color>        <!-- Main background dark mode -->
+    <color name="footerBackground">#121621</color>  <!-- Footer background dark mode -->
+    <color name="cardBackground">#1B2133</color>    <!-- Card background -->
+    <color name="editTextBackground">#1B2133</color> <!-- EditText background dark -->
+    <color name="textPrimary">#FFFFFF</color>
+    <color name="textSecondary">#A1A1AA</color>
+    <color name="emerald">#10B981</color>
+    <color name="gray200">#10B981</color>
+    <color name="lightBackground">#F9FAFB</color>
+    <color name="darkBackground">#0E111B</color>
+    <color name="gray">#777777</color>
+    <color name="red">#FF0033</color>
+    <color name="green">#10B981</color>
+
+    <color name="yellow">#C77A00</color>
+    <color name="blue">#0052CC</color>
+    <color name="purple">#7B1FA2</color>
+    <color name="grayDark">#6B7280</color>
+
+
+</resources>
