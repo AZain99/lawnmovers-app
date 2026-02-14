@@ -15,6 +15,8 @@ class ServiceBookingActivity : AppCompatActivity() {
     private lateinit var tvPropertySize: TextView
     private lateinit var btnDecrease: Button
     private lateinit var btnIncrease: Button
+
+    private lateinit var  btnBookNow : Button
     private lateinit var btnThemeToggle: ImageButton
     private lateinit var layoutSummary: LinearLayout
     private lateinit var btnProfile: ImageButton
@@ -46,6 +48,7 @@ class ServiceBookingActivity : AppCompatActivity() {
         layoutSummary = findViewById(R.id.layoutSummary)
         btnProfile = findViewById(R.id.btnProfile) // Footer profile button
         btnJobTrack = findViewById(R.id.btnJobs)
+        btnBookNow = findViewById(R.id.btnBookNow)
     }
 
     private fun setupServices() {
@@ -160,6 +163,10 @@ class ServiceBookingActivity : AppCompatActivity() {
         }
         btnJobTrack.setOnClickListener {
             val intent = Intent(this, CustomerJobTrackingActivity::class.java)
+            startActivity(intent)
+        }
+        btnBookNow.setOnClickListener {
+            val intent = Intent(this, CustomerPaymentActivity::class.java)
             startActivity(intent)
         }
     }

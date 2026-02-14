@@ -36,6 +36,13 @@
             android:name=".ScheduleActivity"
             android:exported="false" />
         <activity
+            android:name=".CheckoutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CustomerPaymentActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".SignUpActivity"
             android:exported="false" /> <!-- <activity -->
         <!-- android:name=".MainActivity" -->
