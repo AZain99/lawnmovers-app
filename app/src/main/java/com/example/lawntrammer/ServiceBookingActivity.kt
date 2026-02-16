@@ -23,6 +23,12 @@ class ServiceBookingActivity : AppCompatActivity() {
 
     private lateinit var btnJobTrack: ImageButton
 
+    private lateinit var btnHome: ImageButton
+    private lateinit var btnEarnings: ImageButton
+
+
+
+
     private var darkMode = true
     private var selectedService = "Lawn Mowing"
     private var propertySize = 100
@@ -49,6 +55,10 @@ class ServiceBookingActivity : AppCompatActivity() {
         btnProfile = findViewById(R.id.btnProfile) // Footer profile button
         btnJobTrack = findViewById(R.id.btnJobs)
         btnBookNow = findViewById(R.id.btnBookNow)
+        btnHome = findViewById(R.id.btnHome)
+        btnEarnings = findViewById(R.id.btnEarnings)
+
+
     }
 
     private fun setupServices() {
@@ -166,8 +176,15 @@ class ServiceBookingActivity : AppCompatActivity() {
             startActivity(intent)
         }
         btnBookNow.setOnClickListener {
+            val intent = Intent(this, CheckoutActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnEarnings.setOnClickListener {
             val intent = Intent(this, CustomerPaymentActivity::class.java)
             startActivity(intent)
         }
+
+
     }
 }

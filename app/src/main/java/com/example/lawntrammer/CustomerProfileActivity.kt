@@ -1,5 +1,6 @@
 package com.example.lawntrammer
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
@@ -29,13 +30,23 @@ class CustomerProfileActivity : AppCompatActivity() {
 
         // Footer Buttons
         val btnHome = findViewById<ImageButton>(R.id.btnHome)
-        val btnCard = findViewById<ImageButton>(R.id.btnPayments)
+        val btnEarnings = findViewById<ImageButton>(R.id.btnPayments)
         val btnJobs = findViewById<ImageButton>(R.id.btnJobs)
         val btnProfile = findViewById<ImageButton>(R.id.btnProfile)
 
-        btnHome.setOnClickListener { /* Navigate to Home */ }
-        btnCard.setOnClickListener { /* Navigate to Payments */ }
-        btnJobs.setOnClickListener { /* Navigate to Jobs */ }
-        btnProfile.setOnClickListener { /* Already Profile */ }
+
+
+        btnHome.setOnClickListener {
+            val intent = Intent(this, ServiceBookingActivity::class.java)
+            startActivity(intent)
+        }
+        btnJobs.setOnClickListener {
+            val intent = Intent(this, CustomerJobTrackingActivity::class.java)
+            startActivity(intent)
+        }
+        btnEarnings.setOnClickListener {
+            startActivity(Intent(this, CustomerPaymentActivity::class.java))
+
+        }
     }
 }

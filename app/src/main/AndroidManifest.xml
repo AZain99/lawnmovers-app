@@ -12,9 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LawnTamers">
         <activity
+            android:name=".JobHistoryProviderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NavigateJobActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProviderDashboardActivity"
             android:exported="false" />
-
         <activity
             android:name=".ItemJobCardActivity"
             android:exported="false" />
@@ -41,7 +46,6 @@
         <activity
             android:name=".CustomerPaymentActivity"
             android:exported="false" />
-
         <activity
             android:name=".SignUpActivity"
             android:exported="false" /> <!-- <activity -->

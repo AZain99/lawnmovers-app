@@ -1,12 +1,13 @@
 package com.example.lawntrammer
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
-import android.view.LayoutInflater
-import android.view.View
 
 class ProviderDashboardActivity : AppCompatActivity() {
 
@@ -17,12 +18,14 @@ class ProviderDashboardActivity : AppCompatActivity() {
 
     private var darkMode = false
 
+    // Job data class
     data class Job(
         val title: String,
         val location: String,
         val time: String
     )
 
+    // Sample job lists
     private val activeJobs = listOf(
         Job("Front Lawn - Weekly", "123 Main St, Suburbia", "Today at 2:00 PM")
     )
@@ -41,6 +44,7 @@ class ProviderDashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_provider_dashboard)
 
+        // Initialize containers and theme toggle
         activeJobsContainer = findViewById(R.id.activeJobsContainer)
         jobRequestsContainer = findViewById(R.id.jobRequestsContainer)
         scheduledJobsContainer = findViewById(R.id.scheduledJobsContainer)
@@ -49,6 +53,7 @@ class ProviderDashboardActivity : AppCompatActivity() {
         btnToggleTheme.setOnClickListener {
             darkMode = !darkMode
             applyTheme()
+            renderJobs() // update card status text colors
         }
 
         renderJobs()
@@ -85,10 +90,21 @@ class ProviderDashboardActivity : AppCompatActivity() {
 
     private fun setJobData(view: View, job: Job) {
         view.findViewById<TextView>(R.id.tvJobTitle).text = job.title
-        val tvStatus = view.findViewById<TextView>(R.id.tvJobStatus)
-        tvStatus.text = if (darkMode) "Pending" else "Requested" // Example status
+        view.findViewById<TextView>(R.id.tvJobLocation)?.text = job.location
         view.findViewById<TextView>(R.id.tvJobTime).text = job.time
-        // If you want to show location in card, make sure to add tvJobLocation in item_job_card.xml
+
+        val tvStatus = view.findViewById<TextView>(R.id.tvJobStatus)
+        tvStatus.text = if (darkMode) "Pending" else "Requested"
+
+        // Set Navigate button click for this card
+        val btnNavigate = view.findViewById<MaterialButton>(R.id.btnNavigate)
+        btnNavigate.setOnClickListener {
+            val intent = Intent(this, NavigateJobActivity::class.java)
+            intent.putExtra("jobTitle", job.title)
+            intent.putExtra("jobLocation", job.location)
+            intent.putExtra("jobTime", job.time)
+            startActivity(intent)
+        }
     }
 
     private fun applyTheme() {
@@ -97,17 +113,18 @@ class ProviderDashboardActivity : AppCompatActivity() {
 
         findViewById<LinearLayout>(R.id.headerLayout).setBackgroundResource(bgColor)
         findViewById<LinearLayout>(R.id.footerLayout).setBackgroundResource(bgColor)
-        findViewById<LinearLayout>(R.id.activeJobsContainer).setBackgroundResource(bgColor)
-        findViewById<LinearLayout>(R.id.jobRequestsContainer).setBackgroundResource(bgColor)
-        findViewById<LinearLayout>(R.id.scheduledJobsContainer).setBackgroundResource(bgColor)
+        activeJobsContainer.setBackgroundResource(bgColor)
+        jobRequestsContainer.setBackgroundResource(bgColor)
+        scheduledJobsContainer.setBackgroundResource(bgColor)
 
-        // Optionally update all job card text colors dynamically
+        // Update text colors of all job cards
         fun updateTextColor(container: LinearLayout) {
             for (i in 0 until container.childCount) {
                 val card = container.getChildAt(i)
-                card.findViewById<TextView>(R.id.tvJobTitle).setTextColor(resources.getColor(textColor))
-                card.findViewById<TextView>(R.id.tvJobStatus).setTextColor(resources.getColor(textColor))
-                card.findViewById<TextView>(R.id.tvJobTime).setTextColor(resources.getColor(textColor))
+                card.findViewById<TextView>(R.id.tvJobTitle)?.setTextColor(resources.getColor(textColor))
+                card.findViewById<TextView>(R.id.tvJobStatus)?.setTextColor(resources.getColor(textColor))
+                card.findViewById<TextView>(R.id.tvJobTime)?.setTextColor(resources.getColor(textColor))
+                card.findViewById<TextView>(R.id.tvJobLocation)?.setTextColor(resources.getColor(textColor))
             }
         }
 

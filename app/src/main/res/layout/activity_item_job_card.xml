@@ -71,13 +71,13 @@
             android:visibility="visible">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAction1"
+                android:id="@+id/btnNavigate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Navigate"
                 android:textSize="12sp"
                 android:layout_marginEnd="8dp"
-                android:backgroundTint="@color/emerald"
+                app:backgroundTint="@color/emerald"
                 android:textColor="@color/white"/>
 
             <com.google.android.material.button.MaterialButton

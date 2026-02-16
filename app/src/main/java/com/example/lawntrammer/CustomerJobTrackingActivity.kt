@@ -1,13 +1,13 @@
 package com.example.lawntrammer
+
+import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.card.MaterialCardView
-import android.view.ViewGroup
-import android.view.LayoutInflater
-import com.example.lawntrammer.R
 
 class CustomerJobTrackingActivity : AppCompatActivity() {
 
@@ -15,14 +15,21 @@ class CustomerJobTrackingActivity : AppCompatActivity() {
     private lateinit var btnRefresh: MaterialButton
     private lateinit var btnSunToggle: MaterialButton
 
+    private lateinit var btnProfile: ImageButton
+    private lateinit var btnJobTrack: ImageButton
+    private lateinit var btnHome: ImageButton
+    private lateinit var btnEarnings: ImageButton
+
     private var darkMode = false
 
+    // Data class
     data class Job(
         val title: String,
         var status: String,
         val time: String
     )
 
+    // Sample Data
     private val jobs = mutableListOf(
         Job("Lawn Mowing - Johnson Residence", "Requested", "Last updated: 2 mins ago"),
         Job("Hedge Trimming - Park Avenue", "Accepted", "Last updated: 10 mins ago"),
@@ -34,10 +41,13 @@ class CustomerJobTrackingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_job_tracking)
 
-        jobContainer = findViewById(R.id.jobContainer)
-        btnRefresh = findViewById(R.id.btnRefresh)
-        btnSunToggle = findViewById(R.id.btnSunToggle)
+        // 1️⃣ Initialize all views
+        initViews()
 
+        // 2️⃣ Setup listeners
+        setupListeners()
+
+        // 3️⃣ Other actions
         btnRefresh.setOnClickListener {
             refreshJobs()
         }
@@ -47,11 +57,52 @@ class CustomerJobTrackingActivity : AppCompatActivity() {
             applyTheme()
         }
 
+        // 4️⃣ Render jobs
         renderJobs()
     }
 
+    // ============================
+    // Initialize Views
+    // ============================
+    private fun initViews() {
+        jobContainer = findViewById(R.id.jobContainer)
+        btnRefresh = findViewById(R.id.btnRefresh)
+        btnSunToggle = findViewById(R.id.btnSunToggle)
+
+        btnProfile = findViewById(R.id.btnProfile)
+        btnJobTrack = findViewById(R.id.btnJobs)
+        btnHome = findViewById(R.id.btnHome)
+        btnEarnings = findViewById(R.id.btnPayments)
+
+        // Disable current screen button (important)
+        btnJobTrack.isEnabled = false
+    }
+
+    // ============================
+    // Setup Navigation
+    // ============================
+    private fun setupListeners() {
+
+        btnProfile.setOnClickListener {
+            startActivity(Intent(this, CustomerProfileActivity::class.java))
+        }
+
+        btnHome.setOnClickListener {
+            val intent = Intent(this, ServiceBookingActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnEarnings.setOnClickListener {
+            startActivity(Intent(this, CustomerPaymentActivity::class.java))
+        }
+    }
+
+    // ============================
+    // Render Job Cards
+    // ============================
     private fun renderJobs() {
         jobContainer.removeAllViews()
+
         for (job in jobs) {
             val jobView = LayoutInflater.from(this)
                 .inflate(R.layout.activity_item_job_card, jobContainer, false)
@@ -68,6 +119,9 @@ class CustomerJobTrackingActivity : AppCompatActivity() {
         }
     }
 
+    // ============================
+    // Refresh Random Status
+    // ============================
     private fun refreshJobs() {
         val statuses = listOf("Requested", "Accepted", "In Progress", "Completed")
         for (job in jobs) {
@@ -76,12 +130,19 @@ class CustomerJobTrackingActivity : AppCompatActivity() {
         renderJobs()
     }
 
+    // ============================
+    // Dark / Light Mode
+    // ============================
     private fun applyTheme() {
-        val backgroundColor = if (darkMode) R.color.darkBackground else R.color.lightBackground
-        val textColor = if (darkMode) R.color.white else R.color.black
-        findViewById<LinearLayout>(R.id.headerLayout).setBackgroundResource(backgroundColor)
-        findViewById<LinearLayout>(R.id.footerLayout).setBackgroundResource(backgroundColor)
+        val backgroundColor =
+            if (darkMode) R.color.darkBackground else R.color.lightBackground
+
+        findViewById<LinearLayout>(R.id.headerLayout)
+            .setBackgroundResource(backgroundColor)
+
+        findViewById<LinearLayout>(R.id.footerLayout)
+            .setBackgroundResource(backgroundColor)
+
         jobContainer.setBackgroundResource(backgroundColor)
-        // Optionally: loop over job cards and set text color dynamically
     }
 }
