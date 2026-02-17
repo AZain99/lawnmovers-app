@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.example.lawntrammer.EarningsActivity
 
 class JobHistoryProviderActivity : AppCompatActivity() {
 
@@ -54,15 +55,15 @@ class JobHistoryProviderActivity : AppCompatActivity() {
             val intent = Intent(this, ProviderDashboardActivity::class.java)
             startActivity(intent)
         }
-//        btnPayments.setOnClickListener {
-//            val intent = Intent(this, JobHistoryProviderActivity::class.java)
-//            startActivity(intent)
-//        }
+        btnPayments.setOnClickListener {
+            val intent = Intent(this, EarningsActivity::class.java)
+            startActivity(intent)
+        }
 //
-//        btnEarnings.setOnClickListener {
-//            val intent = Intent(this, CustomerPaymentActivity::class.java)
-//            startActivity(intent)
-//        }
+        btnProfile.setOnClickListener {
+            val intent = Intent(this, ProviderProfileActivity::class.java)
+            startActivity(intent)
+        }
 
 
     }

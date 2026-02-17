@@ -24,9 +24,9 @@ class ScheduleActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         val jobs = listOf(
-            Job("Front Lawn - Weekly", "123 Main St", "Today at 02:00 PM", "Start Job"),
-            Job("Front Lawn - Weekly", "123 Main St", "Today at 02:00 PM", "Completed"),
-            Job("Front Lawn - Weekly", "123 Main St", "Tomorrow at 02:00 PM", "Start Job")
+            Job("Front Lawn - Weekly", "123 Main St", "Today at 02:00 PM", "Start Job",),
+            Job("Front Lawn - Weekly", "123 Main St", "Today at 02:00 PM", "Completed",),
+            Job("Front Lawn - Weekly", "123 Main St", "Tomorrow at 02:00 PM", "Start Job",)
         )
         recyclerView.adapter = JobAdapter(jobs)
         val btnTheme = findViewById<ImageButton>(R.id.btnTheme)

@@ -9,13 +9,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.lawntrammer.EarningsActivity
 
 class NavigateJobActivity : AppCompatActivity() {
 
 
     private lateinit var btnJobs: ImageView
-
-
+    private lateinit var btnPayments: ImageView
+    private lateinit var btnProfile: ImageView
     private lateinit var btnHome: ImageView
     private var darkMode = false
 
@@ -57,6 +58,10 @@ class NavigateJobActivity : AppCompatActivity() {
 
         btnHome = findViewById(R.id.btnHome)
         btnJobs = findViewById(R.id.btnJobs)
+        btnPayments =  findViewById(R.id.btnPayments)
+        btnProfile =  findViewById(R.id.btnProfile)
+
+
 
     }
     private fun setupListeners() {
@@ -69,10 +74,15 @@ class NavigateJobActivity : AppCompatActivity() {
             startActivity(intent)
         }
 //
-//        btnEarnings.setOnClickListener {
-//            val intent = Intent(this, CustomerPaymentActivity::class.java)
-//            startActivity(intent)
-//        }
+        btnPayments.setOnClickListener {
+            val intent = Intent(this, EarningsActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnProfile.setOnClickListener {
+            val intent = Intent(this, ProviderProfileActivity::class.java)
+            startActivity(intent)
+        }
 
 
     }

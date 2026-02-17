@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LawnTamers">
         <activity
+            android:name=".ProviderProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EarningsActivity"
+            android:exported="false" />
+        <activity
             android:name=".JobHistoryProviderActivity"
             android:exported="false" />
         <activity

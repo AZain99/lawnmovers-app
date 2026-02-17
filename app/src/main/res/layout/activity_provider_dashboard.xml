@@ -180,48 +180,156 @@
             android:paddingTop="8dp"/>
 
         <!-- Footer Navigation -->
+        <!-- Footer Navigation -->
+<!--        <LinearLayout-->
+<!--            android:id="@+id/footerLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="60dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:gravity="center"-->
+<!--            android:background="@color/white"-->
+<!--            android:weightSum="4"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:elevation="8dp"-->
+<!--            android:paddingStart="8dp"-->
+<!--            android:paddingEnd="8dp">-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/btnHome"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:src="@drawable/ic_home"-->
+<!--                android:scaleType="centerInside"-->
+<!--                android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--                android:contentDescription="Home"/>-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/btnEarnings"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:src="@drawable/ic_dollar"-->
+<!--                android:scaleType="centerInside"-->
+<!--                android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--                android:contentDescription="Earnings"/>-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/btnJobs"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:src="@drawable/ic_calendar"-->
+<!--                android:scaleType="centerInside"-->
+<!--                android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--                android:contentDescription="Jobs"/>-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/btnProfile"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:src="@drawable/ic_user"-->
+<!--                android:scaleType="centerInside"-->
+<!--                android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--                android:contentDescription="Profile"/>-->
+<!--        </LinearLayout>-->
         <LinearLayout
-            android:id="@+id/footerLayout"
+            android:id="@+id/bottomNav"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:orientation="horizontal"
             android:gravity="center"
-            android:background="@color/white"
             android:weightSum="4"
+            android:background="@color/white"
             android:layout_marginTop="16dp">
 
-            <ImageButton
-                android:id="@+id/btnHome"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+            <!-- Home -->
+            <LinearLayout
+                android:id="@+id/navHome"
                 android:layout_weight="1"
-                android:src="@drawable/ic_home"
-                android:background="@color/white"/>
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
 
-            <ImageButton
-                android:id="@+id/btnEarnings"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:src="@drawable/ic_dollar"
-                android:background="@color/white"/>
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_home"/>
 
-            <ImageButton
-                android:id="@+id/btnJobs"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:src="@drawable/ic_calendar"
-                android:background="@color/white"/>
+                <TextView
+                    android:text="Home"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btnProfile"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+            <!-- Earnings -->
+            <LinearLayout
+                android:id="@+id/navPayments"
                 android:layout_weight="1"
-                android:src="@drawable/ic_user"
-                android:background="@color/white"/>
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_payment"/>
+
+                <TextView
+                    android:text="Earnings"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <!-- Jobs -->
+            <LinearLayout
+                android:id="@+id/navJobs"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_jobs"/>
+
+                <TextView
+                    android:text="Jobs"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <!-- Profile -->
+            <LinearLayout
+                android:id="@+id/navProfile"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_profile"/>
+
+                <TextView
+                    android:text="Profile"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
         </LinearLayout>
+
 
     </LinearLayout>
 </ScrollView>

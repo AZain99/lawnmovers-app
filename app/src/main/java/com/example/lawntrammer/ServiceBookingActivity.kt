@@ -184,6 +184,11 @@ class ServiceBookingActivity : AppCompatActivity() {
             val intent = Intent(this, CustomerPaymentActivity::class.java)
             startActivity(intent)
         }
+        btnHome.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
 
 
     }

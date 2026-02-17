@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,11 @@ class ProviderDashboardActivity : AppCompatActivity() {
     private lateinit var jobRequestsContainer: LinearLayout
     private lateinit var scheduledJobsContainer: LinearLayout
     private lateinit var btnToggleTheme: MaterialButton
+
+    private lateinit var btnHome: LinearLayout
+    private lateinit var btnPayments: LinearLayout
+    private lateinit var btnJobs: LinearLayout
+    private lateinit var btnProfile: LinearLayout
 
     private var darkMode = false
 
@@ -44,6 +50,9 @@ class ProviderDashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_provider_dashboard)
 
+        initViews()
+        setupListeners()
+
         // Initialize containers and theme toggle
         activeJobsContainer = findViewById(R.id.activeJobsContainer)
         jobRequestsContainer = findViewById(R.id.jobRequestsContainer)
@@ -58,6 +67,41 @@ class ProviderDashboardActivity : AppCompatActivity() {
 
         renderJobs()
     }
+
+    private fun initViews() {
+
+
+        btnHome = findViewById(R.id.navHome)
+        btnJobs = findViewById(R.id.navJobs)
+        btnPayments =  findViewById(R.id.navPayments)
+        btnProfile =  findViewById(R.id.navProfile)
+
+
+
+    }
+    private fun setupListeners() {
+        btnHome.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+        btnJobs.setOnClickListener {
+            val intent = Intent(this, JobHistoryProviderActivity::class.java)
+            startActivity(intent)
+        }
+//
+        btnPayments.setOnClickListener {
+            val intent = Intent(this, EarningsActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnProfile.setOnClickListener {
+            val intent = Intent(this, ProviderProfileActivity::class.java)
+            startActivity(intent)
+        }
+
+
+    }
+
 
     private fun renderJobs() {
         // Active Jobs
