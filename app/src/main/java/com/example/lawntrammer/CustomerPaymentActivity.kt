@@ -14,7 +14,7 @@ import com.google.android.material.button.MaterialButton
 class CustomerPaymentActivity : AppCompatActivity() {
 
     private lateinit var layoutPaymentList: LinearLayout
-    private var isDarkMode = true
+    private var isDarkMode = false
 
     data class PaymentRecord(
         val service: String,

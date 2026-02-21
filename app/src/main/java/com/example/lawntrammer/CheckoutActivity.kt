@@ -14,7 +14,7 @@ class CheckoutActivity : AppCompatActivity() {
     private lateinit var layoutMethods: LinearLayout
     private lateinit var btnConfirmPay: MaterialButton
     private var selectedMethodId: Int = -1
-    private var isDarkMode = true
+    private var isDarkMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
