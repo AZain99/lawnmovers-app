@@ -8,10 +8,13 @@ import * as path from 'path';
     provide: 'FIREBASE_ADMIN',
     useFactory: () => {
       // Download this JSON from Firebase Console -> Project Settings -> Service Accounts
-      const serviceAccount = require(path.join(process.cwd(), 'serviceAccountKey.json'));
-      return admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-      });
+    const serviceAccount = require(path.join(process.cwd(), 'serviceAccountKey.json'));
+      if (!admin.apps.length) {
+        admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount),
+        });
+        }
+        return admin.app()
     },
   }],
   exports: ['FIREBASE_ADMIN'],

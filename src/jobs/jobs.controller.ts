@@ -21,10 +21,3 @@ export class JobsController {
     return this.jobsService.getJobsByRole(req.user.uid, 'Customer');
   }
 }
-
-
-// val user = FirebaseAuth.getInstance().currentUser
-// user?.getIdToken(true)?.addOnSuccessListener { result ->
-//     val token = result.token
-//     // Send this token in your 'Authorization: Bearer <token>' header
-// }

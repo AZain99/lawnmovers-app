@@ -5,26 +5,27 @@ import * as admin from 'firebase-admin';
 export class JobsService {
   private db = admin.firestore();
 
-  // For Customer: Create a new booking
-  async createJob(customerId: string, jobDto: any) {
-    const newJob = {
+  async createJob(customerId: string, data: any) {
+    return await this.db.collection('jobs').add({
       customerId,
-      title: jobDto.serviceName,
+      serviceName: data.serviceName,
+      propertySize: data.propertySize,
+      price: data.price,
+      location: data.location,
       status: 'Requested',
-      price: jobDto.price,
-      location: jobDto.location,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    };
-    return await this.db.collection('jobs').add(newJob);
+    });
   }
 
-  // For Provider/Customer: Get jobs by status (Used in ProviderDashboardActivity)
+  async updateJobStatus(jobId: string, status: string, providerId?: string) {
+    const updateData: any = { status };
+    if (providerId) updateData.providerId = providerId;
+    return await this.db.collection('jobs').doc(jobId).update(updateData);
+  }
+
   async getJobsByRole(userId: string, role: string) {
-    const field = role === 'Customer' ? 'customerId' : 'providerId';
-    const snapshot = await this.db.collection('jobs')
-      .where(field, '==', userId)
-      .get();
-      
+    const field = role === 'Provider' ? 'providerId' : 'customerId';
+    const snapshot = await this.db.collection('jobs').where(field, '==', userId).get();
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   }
 }

@@ -7,14 +7,14 @@ export class FirebaseAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = request.headers.authorization?.split('Bearer ')[1];
 
-    if (!token) throw new UnauthorizedException('No token provided');
+    if (!token) throw new UnauthorizedException('Missing Token');
 
     try {
       const decodedToken = await admin.auth().verifyIdToken(token);
       request.user = decodedToken;
       return true;
     } catch (error) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException('Invalid Token');
     }
   }
 }
