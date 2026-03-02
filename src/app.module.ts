@@ -1,12 +1,27 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { FirebaseModule } from './firebase/firebase.module';
-import { JobsService } from './jobs/jobs.service';
+import { UsersModule } from './users/users.module';
+import { JobsModule } from './jobs/jobs.module';
+import { PaymentsModule } from './payments/payments.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { WithdrawalsModule } from './withdrawals/withdrawals.module'; // Added
+import { DisputesModule } from './disputes/disputes.module';       // Added
+import { NotificationsModule } from './notifications/notifications.module';
+import { SupportModule } from './support/support.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
-  imports: [FirebaseModule],
-  controllers: [AppController],
-  providers: [AppService, JobsService],
+  imports: [
+    FirebaseModule,
+    UsersModule,
+    JobsModule,
+    PaymentsModule,
+    ReviewsModule,
+    WithdrawalsModule,
+    DisputesModule,
+    NotificationsModule,
+    SupportModule,
+    SettingsModule,
+  ],
 })
 export class AppModule {}
