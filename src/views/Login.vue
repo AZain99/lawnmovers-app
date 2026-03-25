@@ -32,7 +32,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 // Import local assets
 import logo from '@/assets/logo.png';
@@ -54,7 +55,6 @@ const handleLogin = async () => {
   loading.value = true;
   error.value = '';
   try {
-    const auth = getAuth();
     await signInWithEmailAndPassword(auth, email.value, password.value);
     router.push('/dashboard');
   } catch (err) {

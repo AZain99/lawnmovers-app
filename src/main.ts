@@ -2,27 +2,36 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from './router';
-import { initializeApp } from 'firebase/app';
+
+// Import your initialized Firebase services
+import { auth } from './firebase'; // This points to the new firebase.ts file
+import { onAuthStateChanged } from 'firebase/auth';
 
 // Global Styles
 import './assets/styles.css';
 
-// Your Firebase configuration
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "lawntrammer-backend.firebaseapp.com",
-  projectId: "lawntrammer-backend",
-  storageBucket: "lawntrammer-backend.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
+let app: any;
 
-// Initialize Firebase
-initializeApp(firebaseConfig);
+/**
+ * We wrap the app mount in an Auth observer. 
+ * This ensures that if a user refreshes the page, 
+ * Firebase restores their session before the router tries to protect a page.
+ */
+onAuthStateChanged(auth, (user) => {
+  if (!app) {
+    app = createApp(App);
 
-const app = createApp(App);
+    app.use(createPinia());
+    app.use(router);
 
-app.use(createPinia());
-app.use(router);
+    app.mount('#app');
+    
+    console.log("Vue App Mounted");
+  }
 
-app.mount('#app');
+  if (user) {
+    console.log("Admin is logged in:", user.email);
+  } else {
+    console.log("No active session.");
+  }
+});
