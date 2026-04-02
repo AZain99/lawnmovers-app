@@ -48,8 +48,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-// import adminApi from '../api/adminService';
-import adminApi from '../api/mockService';
+import adminApi from '../api/adminService';
+// import adminApi from '../api/mockService';
 
 const disputes = ref([]);
 const filterStatus = ref('open');

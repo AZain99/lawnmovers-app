@@ -97,8 +97,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-// import adminApi from '../api/adminService';
-import adminApi from '../api/mockService';
+import adminApi from '../api/adminService';
+// import adminApi from '../api/mockService';
 
 const users = ref([]);
 const roleFilter = ref('all');
@@ -112,7 +112,7 @@ const fetchUsers = async () => {
 const filteredUsers = computed(() => {
   return users.value.filter(u => {
     const matchesRole = roleFilter.value === 'all' || u.role === roleFilter.value;
-    const matchesSearch = u.name.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
+    const matchesSearch = //u.role.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
                           u.email.toLowerCase().includes(searchQuery.value.toLowerCase());
     return matchesRole && matchesSearch;
   });

@@ -41,7 +41,7 @@ const router = createRouter({
 // Navigation Guard
 router.beforeEach((to, from, next) => {
   // If you are in 'Local Development' mode, just click next
-  const isLocalMockMode = true; 
+  const isLocalMockMode = false; 
 
   if (isLocalMockMode) {
     next(); // Skip login check

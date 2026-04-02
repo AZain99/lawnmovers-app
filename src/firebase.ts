@@ -3,12 +3,13 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY", // Replace with your actual key from Firebase Console
+  apiKey: "AIzaSyCLJo1a89I7Ip2_cvyAhM9ytccOLb6RqI0",
   authDomain: "lawntrammer-backend.firebaseapp.com",
   projectId: "lawntrammer-backend",
-  storageBucket: "lawntrammer-backend.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  storageBucket: "lawntrammer-backend.firebasestorage.app",
+  messagingSenderId: "1042588742889",
+  appId: "1:1042588742889:web:7bdf94849fd2b46af16c78",
+  measurementId: "G-MP7CKNEC2Y"
 };
 
 // Initialize the Firebase App

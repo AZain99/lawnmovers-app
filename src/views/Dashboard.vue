@@ -51,8 +51,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-// import adminApi from '../api/adminService';
-import adminApi from '../api/mockService';
+import adminApi from '../api/adminService';
+// import adminApi from '../api/mockService';
 
 const stats = ref({ totalRevenue: 0, activeJobs: 0, pendingWithdrawals: 0, openDisputes: 0 });
 const recentJobs = ref([]);

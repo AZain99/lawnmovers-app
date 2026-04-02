@@ -26,8 +26,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-// import adminApi from '../api/adminService';
-import adminApi from '../api/mockService';
+import adminApi from '../api/adminService';
+// import adminApi from '../api/mockService';
 
 const settings = ref({
   commissionPercentage: 0,
