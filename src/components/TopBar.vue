@@ -4,7 +4,7 @@
       <button class="toggle-btn" @click="$emit('toggle-sidebar')">
         <span class="material-symbols-rounded">menu_open</span>
       </button>
-      
+
       <div class="search-box">
         <span class="material-symbols-rounded search-icon">search</span>
         <input 
@@ -19,7 +19,7 @@
       <div class="notification-wrapper" @click="showNotifications = !showNotifications">
         <span class="material-symbols-rounded icon-btn">notifications</span>
         <span class="notification-badge">3</span>
-        
+
         <div v-if="showNotifications" class="dropdown-panel notification-dropdown">
           <div class="dropdown-header">Recent Alerts</div>
           <div class="dropdown-item">New job request #9921</div>
@@ -31,26 +31,26 @@
       <div class="profile-container" v-click-outside="closeDropdown">
         <div class="admin-profile" @click="showProfileDropdown = !showProfileDropdown">
           <div class="admin-info">
-            <span class="admin-name">Super Admin</span>
-            <span class="admin-role">Platform Manager</span>
+            <span class="admin-name">{{ adminName }}</span>
+            <span class="admin-role">{{ adminRole }}</span>
           </div>
           <div class="avatar-wrapper">
-            <img src="https://ui-avatars.com/api/?name=Admin&background=2ecc71&color=fff" alt="Admin Avatar" />
+            <img :src="avatarUrl" alt="Admin Avatar" />
           </div>
           <span class="material-symbols-rounded expand-icon">expand_more</span>
         </div>
 
         <div v-if="showProfileDropdown" class="dropdown-panel profile-dropdown">
-          <a href="#" class="dropdown-link">
+          <button class="dropdown-link" @click="goToProfile()">
             <span class="material-symbols-rounded">person</span> Profile
-          </a>
-          <a href="#" class="dropdown-link">
+          </button>
+          <button class="dropdown-link" @click="goToAccount()">
             <span class="material-symbols-rounded">settings</span> Account
-          </a>
+          </button>
           <hr />
-          <a href="#" @click.prevent="handleLogout" class="dropdown-link logout">
+          <button class="dropdown-link logout" @click.prevent="handleLogout">
             <span class="material-symbols-rounded">logout</span> Logout
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -58,18 +58,33 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { getAuth, signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'vue-router';
+import { db } from '@/firebase';
 
 const router = useRouter();
 const searchQuery = ref('');
 const showProfileDropdown = ref(false);
 const showNotifications = ref(false);
+const adminName = ref('Super Admin');
+const adminRole = ref('Platform Manager');
+const avatarUrl = ref('https://ui-avatars.com/api/?name=Admin&background=2ecc71&color=fff');
 
 const closeDropdown = () => {
   showProfileDropdown.value = false;
   showNotifications.value = false;
+};
+
+const goToProfile = () => {
+  showProfileDropdown.value = false;
+  router.push('/profile');
+};
+
+const goToAccount = () => {
+  showProfileDropdown.value = false;
+  router.push('/settings');
 };
 
 const handleLogout = async () => {
@@ -78,9 +93,28 @@ const handleLogout = async () => {
     await signOut(auth);
     router.push('/login');
   } catch (error) {
-    console.error("Logout failed", error);
+    console.error('Logout failed', error);
   }
 };
+
+onMounted(async () => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (!user) return;
+
+  try {
+    const adminDoc = await getDoc(doc(db, 'admin', user.uid));
+    if (adminDoc.exists()) {
+      const data = adminDoc.data();
+      adminName.value = data.name || 'Super Admin';
+      adminRole.value = data.role || 'Platform Manager';
+      avatarUrl.value = `https://ui-avatars.com/api/?name=${encodeURIComponent(adminName.value)}&background=2ecc71&color=fff`;
+    }
+  } catch (error) {
+    console.error('Failed to load admin details', error);
+  }
+});
 </script>
 
 <style scoped>
@@ -97,7 +131,6 @@ const handleLogout = async () => {
   z-index: 100;
 }
 
-/* Left Section */
 .topbar-left { display: flex; align-items: center; gap: 20px; }
 
 .toggle-btn {
@@ -144,7 +177,6 @@ const handleLogout = async () => {
   box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
 }
 
-/* Right Section */
 .topbar-right { display: flex; align-items: center; gap: 15px; }
 
 .notification-wrapper {
@@ -178,7 +210,6 @@ const handleLogout = async () => {
   border: 2px solid white;
 }
 
-/* Profile Section */
 .profile-container { position: relative; }
 
 .admin-profile {
@@ -206,7 +237,6 @@ const handleLogout = async () => {
 
 .expand-icon { font-size: 18px; color: #a0aec0; }
 
-/* Dropdown Shared Styles */
 .dropdown-panel {
   position: absolute;
   top: 55px;
@@ -233,11 +263,16 @@ const handleLogout = async () => {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
   padding: 12px 15px;
   text-decoration: none;
   color: #4a5568;
   font-size: 0.9rem;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .dropdown-link:hover { background: #f7fafc; color: #2ecc71; }

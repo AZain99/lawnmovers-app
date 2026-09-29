@@ -2,16 +2,17 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 // Layouts & Views
-import AdminLayout from '@/layouts/AdminLayout.vue';
-import Login from '@/views/Login.vue';
-import Dashboard from '@/views/Dashboard.vue';
-import Users from '@/views/Users.vue';
-import Jobs from '@/views/Jobs.vue';
-import Payouts from '@/views/Payouts.vue';
-import Disputes from '@/views/Disputes.vue';
-import Settings from '@/views/Settings.vue';
-import Payments from '@/views/Payments.vue'; 
-import Support from '@/views/Support.vue';
+const AdminLayout = () => import('@/layouts/AdminLayout.vue');
+const Login = () => import('@/views/Login.vue');
+const Dashboard = () => import('@/views/Dashboard.vue');
+const Users = () => import('@/views/Users.vue');
+const Jobs = () => import('@/views/Jobs.vue');
+const Payouts = () => import('@/views/Payouts.vue');
+const Disputes = () => import('@/views/Disputes.vue');
+const Settings = () => import('@/views/Settings.vue');
+const Payments = () => import('@/views/Payments.vue');
+const Support = () => import('@/views/Support.vue');
+const Profile = () => import('@/views/Profile.vue');
 
 const routes = [
   { path: '/login', name: 'Login', component: Login },
@@ -27,8 +28,9 @@ const routes = [
       { path: 'withdrawals', component: Payouts },
       { path: 'disputes', component: Disputes },
       { path: 'settings', component: Settings },
-      { path: 'payments',component: Payments },
+      { path: 'payments', component: Payments },
       { path: 'support', component: Support },
+      { path: 'profile', component: Profile }
     ]
   }
 ];
@@ -46,21 +48,21 @@ router.beforeEach((to, from, next) => {
   if (isLocalMockMode) {
     next(); // Skip login check
   } else {
-  const auth = getAuth();
-  
-  // Wait for Firebase to initialize auth state
-  const removeListener = onAuthStateChanged(auth, (user) => {
-    removeListener(); // Stop listening once we have the state
-    
-    if (to.meta.requiresAuth && !user) {
-      next('/login');
-    } else if (to.path === '/login' && user) {
-      next('/dashboard');
-    } else {
-      next();
-    }
-});
-}
+    const auth = getAuth();
+
+    // Wait for Firebase to initialize auth state
+    const removeListener = onAuthStateChanged(auth, (user) => {
+      removeListener(); // Stop listening once we have the state
+      
+      if (to.meta.requiresAuth && !user) {
+        next('/login');
+      } else if (to.path === '/login' && user) {
+        next('/dashboard');
+      } else {
+        next();
+      }
+    });
+  }
 });
 
 export default router;

@@ -1,72 +1,204 @@
-import { db } from '../firebase'; // Import the db instance from the config above
-import { 
-  collection, 
-  getDocs, 
-  getDoc, 
-  doc, 
-  updateDoc, 
-  addDoc, 
-  query, 
+import { db } from '../firebase';
+import {
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  updateDoc,
+  addDoc,
+  query,
   where,
   orderBy,
   limit,
-  serverTimestamp 
+  serverTimestamp,
+  getCountFromServer,
+  startAfter,
+  endBefore,
+  limitToLast
 } from 'firebase/firestore';
 
-/**
- * Helper to parse endpoint URLs into collection names and IDs
- * Example: '/jobs/JOB-123/status' -> collection: 'jobs', id: 'JOB-123'
- */
+const DEFAULT_LIST_LIMIT = 20;
+
 const parsePath = (url) => {
-  const parts = url.split('/').filter(p => p && p !== 'admin');
+  const trimmed = url.replace(/^\/+|\/+$/g, '');
+  const parts = trimmed.split('/').filter(Boolean);
+
+  if (parts.length === 1 && parts[0] === 'admin') {
+    return { collectionName: 'admin', docId: undefined };
+  }
+
+  if (parts[0] === 'admin') parts.shift();
+
   return {
     collectionName: parts[0],
     docId: parts[1]
   };
 };
 
+const getLimitedCollectionQuery = (collectionName, options = {}) => {
+  const {
+    filters = [],
+    orderField = 'createdAt',
+    orderDirection = 'desc',
+    pageSize = DEFAULT_LIST_LIMIT,
+    lastVisible = null,
+    direction = 'next'
+  } = options;
+
+  let baseQuery = collection(db, collectionName);
+
+  if (filters.length) {
+    baseQuery = query(baseQuery, ...filters);
+  }
+
+  let orderedQuery = query(baseQuery, orderBy(orderField, orderDirection));
+
+  if (lastVisible) {
+    if (direction === 'next') {
+      orderedQuery = query(orderedQuery, startAfter(lastVisible), limit(pageSize));
+    } else {
+      orderedQuery = query(orderedQuery, endBefore(lastVisible), limitToLast(pageSize));
+    }
+  } else {
+    orderedQuery = query(orderedQuery, limit(pageSize));
+  }
+
+  return orderedQuery;
+};
+
+const normalizeStatus = (value) => String(value ?? '').trim().toLowerCase().replace(/[_\s-]+/g, '');
+
+const isSuccessfulPayment = (status) => {
+  const normalized = normalizeStatus(status);
+  return ['succeeded', 'success', 'paid', 'completed', 'complete', 'approved'].includes(normalized) || normalized === '';
+};
+
+const isActiveJob = (status) => {
+  const normalized = normalizeStatus(status);
+  return ['active', 'assigned', 'inprogress', 'in_progress', 'inprogress', 'pendingapproval', 'pending_approval', 'accepted', 'scheduled'].includes(normalized);
+};
+
+const isPendingPayout = (status) => {
+  const normalized = normalizeStatus(status);
+  return ['pending', 'pendingapproval', 'awaitingapproval', 'requested', 'inreview', 'processing'].includes(normalized);
+};
+
+const isOpenDispute = (status) => {
+  const normalized = normalizeStatus(status);
+  return ['open', 'new', 'pending', 'unresolved', 'inreview'].includes(normalized);
+};
+
 export const adminApi = {
-  get: async (url) => {
+  list: async (collectionName, options = {}) => {
+    const {
+      pageSize = DEFAULT_LIST_LIMIT,
+      orderField = 'createdAt',
+      orderDirection = 'desc',
+      lastVisible = null,
+      filters = [],
+      direction = 'next'
+    } = options;
+
+    try {
+      const queryRef = getLimitedCollectionQuery(collectionName, {
+        filters,
+        orderField,
+        orderDirection,
+        pageSize,
+        lastVisible,
+        direction
+      });
+
+      const querySnapshot = await getDocs(queryRef);
+      const data = querySnapshot.docs.map(docSnap => ({
+        id: docSnap.id,
+        ...docSnap.data()
+      }));
+
+      const hasMore = querySnapshot.docs.length >= pageSize;
+      const nextLastVisible = querySnapshot.docs[querySnapshot.docs.length - 1] || null;
+
+      return { data, hasMore, lastVisible: nextLastVisible };
+    } catch (error) {
+      console.error(`Paginated fetch failed for ${collectionName}:`, error);
+      return { data: [], hasMore: false, lastVisible: null };
+    }
+  },
+
+  get: async (url, options = {}) => {
     const { collectionName } = parsePath(url);
 
-    // 1. Handle Dashboard Statistics
     if (url.includes('/stats')) {
-      const usersSnap = await getDocs(collection(db, 'users'));
-      const jobsSnap = await getDocs(collection(db, 'jobs'));
-      const disputeSnap = await getDocs(query(collection(db, 'disputes'), where('status', '==', 'open')));
-      
-      // Get 5 most recent jobs for the dashboard table
-      const recentJobsQuery = query(collection(db, 'jobs'), orderBy('createdAt', 'desc'), limit(5));
-      const recentSnap = await getDocs(recentJobsQuery);
+      const [usersSnap, jobsSnap, disputesSnap, recentJobsSnap, paymentsSnap, withdrawalsSnap] = await Promise.all([
+        getDocs(collection(db, 'users')),
+        getDocs(collection(db, 'jobs')),
+        getDocs(collection(db, 'disputes')),
+        getDocs(query(collection(db, 'jobs'), orderBy('createdAt', 'desc'), limit(5))),
+        getDocs(collection(db, 'payments')),
+        getDocs(collection(db, 'withdrawals'))
+      ]);
+
+      const totalRevenue = paymentsSnap.docs.reduce((sum, paymentDoc) => {
+        const payment = paymentDoc.data() || {};
+        const status = String(payment.status || '').toLowerCase();
+
+        if (!isSuccessfulPayment(status)) return sum;
+
+        const revenueValue = Number(payment.commission ?? payment.amount ?? 0);
+        return sum + (Number.isFinite(revenueValue) ? revenueValue : 0);
+      }, 0);
+
+      const activeJobs = jobsSnap.docs.filter(doc => {
+        const job = doc.data() || {};
+        return isActiveJob(job.status);
+      }).length;
+
+      const pendingWithdrawals = withdrawalsSnap.docs.filter(doc => {
+        const withdrawal = doc.data() || {};
+        return isPendingPayout(withdrawal.status);
+      }).length;
+
+      const openDisputes = disputesSnap.docs.filter(doc => {
+        const dispute = doc.data() || {};
+        return isOpenDispute(dispute.status);
+      }).length;
 
       return {
         data: {
           overview: {
-            totalRevenue: 12450.00, // Recommendation: Use a Cloud Function for real-time aggregate
-            activeJobs: jobsSnap.docs.filter(d => d.data().status === 'in_progress').length,
+            totalRevenue: Number(totalRevenue.toFixed(2)),
+            activeJobs,
             totalUsers: usersSnap.size,
-            pendingWithdrawals: 0,
-            openDisputes: disputeSnap.size
+            pendingWithdrawals,
+            openDisputes
           },
-          recentJobs: recentSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+          recentJobs: recentJobsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
         }
       };
     }
 
-    // 2. Handle Global Settings
     if (collectionName === 'settings') {
       const docRef = doc(db, 'config', 'platformSettings');
       const snap = await getDoc(docRef);
       return { data: snap.exists() ? snap.data() : {} };
     }
 
-    // 3. Default: Fetch full collections (Users, Jobs, Disputes, etc.)
+    const isCollectionListRequest = url.endsWith('/all') || url === `/${collectionName}` || url.includes('/all');
+
+    if (isCollectionListRequest) {
+      const page = await adminApi.list(collectionName, {
+        pageSize: options.pageSize || DEFAULT_LIST_LIMIT,
+        orderField: options.orderField || 'createdAt',
+        orderDirection: options.orderDirection || 'desc',
+        lastVisible: options.lastVisible || null,
+        filters: options.filters || []
+      });
+      return page;
+    }
+
     try {
       const querySnapshot = await getDocs(collection(db, collectionName));
-      const data = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      const data = querySnapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
       return { data };
     } catch (error) {
       console.error(`Error fetching ${collectionName}:`, error);
@@ -76,7 +208,7 @@ export const adminApi = {
 
   patch: async (url, updateData) => {
     const { collectionName, docId } = parsePath(url);
-    if (!docId) throw new Error("Document ID required for update");
+    if (!docId) throw new Error('Document ID required for update');
 
     try {
       const docRef = doc(db, collectionName, docId);
@@ -86,7 +218,7 @@ export const adminApi = {
       });
       return { data: { success: true } };
     } catch (error) {
-      console.error("Update failed:", error);
+      console.error('Update failed:', error);
       throw error;
     }
   },
@@ -94,12 +226,11 @@ export const adminApi = {
   post: async (url, postData) => {
     const { collectionName, docId } = parsePath(url);
 
-    // Special Logic: Support Ticket Replies
     if (collectionName === 'support' && url.includes('/reply')) {
       const docRef = doc(db, 'support', docId);
       const ticket = await getDoc(docRef);
       const existingMessages = ticket.data().messages || [];
-      
+
       await updateDoc(docRef, {
         messages: [...existingMessages, { ...postData, sender: 'admin', timestamp: Date.now() }],
         status: 'responded'
@@ -107,14 +238,12 @@ export const adminApi = {
       return { data: { success: true } };
     }
 
-    // Special Logic: Update Settings
     if (collectionName === 'settings') {
       const docRef = doc(db, 'config', 'platformSettings');
       await updateDoc(docRef, postData);
       return { data: { success: true } };
     }
 
-    // Default: Add new document to a collection
     try {
       const docRef = await addDoc(collection(db, collectionName), {
         ...postData,
@@ -122,7 +251,7 @@ export const adminApi = {
       });
       return { data: { id: docRef.id, success: true } };
     } catch (error) {
-      console.error("Creation failed:", error);
+      console.error('Creation failed:', error);
       throw error;
     }
   }
