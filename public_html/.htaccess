@@ -1,0 +1,13 @@
+RewriteEngine On
+
+# root landing page
+RewriteRule ^$ /index.html [L]
+
+# login app
+RewriteRule ^login/?$ /login/index.html [L]
+RewriteRule ^login/(.*)$ /login/$1 [L]
+
+# Spa fallback for login app routes
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^login/(.*)$ /login/index.html [L]

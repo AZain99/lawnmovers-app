@@ -27,9 +27,19 @@ body { background: var(--bg-light); color: var(--dark-navy); }
 .card { background: var(--white); border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 25px; }
 
 /* Common UI Elements */
-.data-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+.data-table { width: 100%; border-collapse: collapse; margin-top: 15px; table-layout: auto; }
 .data-table th { text-align: left; padding: 12px; border-bottom: 2px solid #ecf0f1; color: var(--text-grey); }
-.data-table td { padding: 12px; border-bottom: 1px solid #ecf0f1; }
+.data-table td { padding: 12px; border-bottom: 1px solid #ecf0f1; vertical-align: top; word-break: break-word; white-space: normal; }
+
+.card,
+.table-card,
+.recent-activity,
+.view-header,
+.filter-card,
+.stat-card,
+.page-content {
+  overflow: visible;
+}
 
 .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
 .badge-pending { background: #fff3cd; color: #856404; }
@@ -133,4 +143,26 @@ body { background: var(--bg-light); color: var(--dark-navy); }
 
 .dispute-view .card:hover {
   transform: translateY(-2px);
+}
+
+/* Responsive Styles */
+@media (max-width: 920px) {
+  html { font-size: 15px; }
+
+  .card {
+    padding: 16px 14px;
+    border-radius: 14px;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 10px 8px;
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+
+  .badge {
+    padding: 4px 8px;
+    font-size: 0.72rem;
+  }
 }

@@ -1,0 +1,350 @@
+/* Mobile Jobs Styles */
+.mobile-jobs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-section {
+  background: white;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.status-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+}
+
+.job-card,
+.withdrawal-card,
+.payment-card,
+.user-card {
+  background: white;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-left: 4px solid #22c55e;
+}
+
+.job-header,
+.withdrawal-header,
+.payment-header,
+.user-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.job-id-badge {
+  display: inline-block;
+  background: #f0f9ff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0b5394;
+}
+
+.job-id {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.job-body,
+.withdrawal-body,
+.payment-body,
+.user-body {
+  font-size: 13px;
+  color: #374151;
+  margin-bottom: 10px;
+}
+
+.job-body p,
+.withdrawal-body p,
+.payment-body p,
+.user-body p {
+  margin: 6px 0;
+}
+
+.payout {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.job-actions,
+.withdrawal-actions,
+.user-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #1f2937;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn.btn-sm {
+  padding: 6px 10px;
+  font-size: 11px;
+}
+
+.btn.btn-primary {
+  background: #22c55e;
+  color: white;
+  border-color: #22c55e;
+}
+
+.btn.btn-primary:hover {
+  background: #1ea853;
+}
+
+.btn.btn-danger {
+  background: #dc2626;
+  color: white;
+  border-color: #dc2626;
+}
+
+.btn.btn-outline {
+  border: 1px solid #d1d5db;
+  background: white;
+}
+
+.badge {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #e0e7ff;
+  color: #4f46e5;
+}
+
+.badge-pending_approval,
+.badge-pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badge-assigned,
+.badge-active {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.badge-in_progress {
+  background: #dbeafe;
+  color: #0b5394;
+}
+
+.badge-completed {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.badge-cancelled,
+.badge-danger {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.badge-succeeded {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.role-tag {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #e0e7ff;
+  color: #4f46e5;
+  display: inline-block;
+}
+
+.role-tag.provider {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+.role-tag.customer {
+  background: #dbeafe;
+  color: #0b5394;
+}
+
+.search-input,
+.form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  margin-bottom: 12px;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 12px;
+}
+
+.tab-btn {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  background: #22c55e;
+  color: white;
+  border-color: #22c55e;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 16px;
+  color: #9ca3af;
+}
+
+.pagination-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-bottom: 16px;
+}
+
+.page-indicator {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.jobs-list,
+.withdrawals-list,
+.payments-list,
+.users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Modal Styles */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,10,10,0.45);
+  z-index: 9999;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: min(100%, 90vw, 500px);
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #1f2937;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.modal-body {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.detail-row {
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+  color: #374151;
+  word-break: break-word;
+}
+
+.detail-row strong {
+  color: #1f2937;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.header-action {
+  text-align: right;
+  margin-bottom: 12px;
+}
+
+.modal.detail-modal {
+  width: min(100%, 90vw, 600px);
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .mobile-jobs,
+  .mobile-users,
+  .mobile-payments,
+  .mobile-withdrawals {
+    display: none;
+  }
+}

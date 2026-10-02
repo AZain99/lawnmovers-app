@@ -129,52 +129,55 @@ export const adminApi = {
     const { collectionName } = parsePath(url);
 
     if (url.includes('/stats')) {
-      const [usersSnap, jobsSnap, disputesSnap, recentJobsSnap, paymentsSnap, withdrawalsSnap] = await Promise.all([
-        getDocs(collection(db, 'users')),
-        getDocs(collection(db, 'jobs')),
-        getDocs(collection(db, 'disputes')),
-        getDocs(query(collection(db, 'jobs'), orderBy('createdAt', 'desc'), limit(5))),
-        getDocs(collection(db, 'payments')),
-        getDocs(collection(db, 'withdrawals'))
-      ]);
+      try {
+        const jobsCol = collection(db, 'jobs');
+        const usersCol = collection(db, 'users');
+        const disputesCol = collection(db, 'disputes');
+        const paymentsCol = collection(db, 'payments');
+        const withdrawalsCol = collection(db, 'withdrawals');
 
-      const totalRevenue = paymentsSnap.docs.reduce((sum, paymentDoc) => {
-        const payment = paymentDoc.data() || {};
-        const status = String(payment.status || '').toLowerCase();
+        const [totalUsersSnap, activeJobsSnap, pendingWithdrawalsSnap, openDisputesSnap, recentJobsSnap, recentPaymentsSnap] = await Promise.all([
+          getCountFromServer(usersCol),
+          getCountFromServer(query(jobsCol, where('status', 'in', ['active', 'assigned', 'in_progress', 'inprogress', 'accepted', 'scheduled', 'pending_approval', 'pendingapproval']))),
+          getCountFromServer(query(withdrawalsCol, where('status', 'in', ['pending', 'pendingapproval', 'awaitingapproval', 'requested', 'inreview', 'processing']))),
+          getCountFromServer(query(disputesCol, where('status', 'in', ['open', 'new', 'pending', 'unresolved', 'inreview']))),
+          getDocs(query(jobsCol, orderBy('createdAt', 'desc'), limit(5))),
+          getDocs(query(paymentsCol, where('status', 'in', ['succeeded', 'success', 'paid', 'completed', 'complete', 'approved']), orderBy('createdAt', 'desc'), limit(50)))
+        ]);
 
-        if (!isSuccessfulPayment(status)) return sum;
+        const totalRevenue = recentPaymentsSnap.docs.reduce((sum, paymentDoc) => {
+          const payment = paymentDoc.data() || {};
+          const value = Number(payment.commission ?? payment.amount ?? 0);
+          return sum + (Number.isFinite(value) ? value : 0);
+        }, 0);
 
-        const revenueValue = Number(payment.commission ?? payment.amount ?? 0);
-        return sum + (Number.isFinite(revenueValue) ? revenueValue : 0);
-      }, 0);
-
-      const activeJobs = jobsSnap.docs.filter(doc => {
-        const job = doc.data() || {};
-        return isActiveJob(job.status);
-      }).length;
-
-      const pendingWithdrawals = withdrawalsSnap.docs.filter(doc => {
-        const withdrawal = doc.data() || {};
-        return isPendingPayout(withdrawal.status);
-      }).length;
-
-      const openDisputes = disputesSnap.docs.filter(doc => {
-        const dispute = doc.data() || {};
-        return isOpenDispute(dispute.status);
-      }).length;
-
-      return {
-        data: {
-          overview: {
-            totalRevenue: Number(totalRevenue.toFixed(2)),
-            activeJobs,
-            totalUsers: usersSnap.size,
-            pendingWithdrawals,
-            openDisputes
-          },
-          recentJobs: recentJobsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
-        }
-      };
+        return {
+          data: {
+            overview: {
+              totalRevenue: Number(totalRevenue.toFixed(2)),
+              activeJobs: activeJobsSnap.data().count ?? 0,
+              totalUsers: totalUsersSnap.data().count ?? 0,
+              pendingWithdrawals: pendingWithdrawalsSnap.data().count ?? 0,
+              openDisputes: openDisputesSnap.data().count ?? 0
+            },
+            recentJobs: recentJobsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+          }
+        };
+      } catch (error) {
+        console.error('Stats fetch failed:', error);
+        return {
+          data: {
+            overview: {
+              totalRevenue: 0,
+              activeJobs: 0,
+              totalUsers: 0,
+              pendingWithdrawals: 0,
+              openDisputes: 0
+            },
+            recentJobs: []
+          }
+        };
+      }
     }
 
     if (collectionName === 'settings') {

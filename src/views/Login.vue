@@ -45,6 +45,7 @@ import { useRouter } from 'vue-router';
 import { db, auth } from '@/firebase';
 import { collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useDevice } from '@/composables/useDevice';
 
 import logo from '@/assets/logo.png';
 
@@ -53,6 +54,7 @@ const password = ref('');
 const loading = ref(false);
 const error = ref('');
 const router = useRouter();
+const { getDeviceType } = useDevice();
 
 const handleLogin = async () => {
   loading.value = true;
@@ -71,7 +73,15 @@ const handleLogin = async () => {
     const querySnapshot = await getDocs(adminQuery);
 
     if (!querySnapshot.empty) {
-      router.push('/dashboard');
+      // Detect device type and route accordingly
+      const deviceType = getDeviceType();
+      localStorage.setItem('deviceType', deviceType);
+      
+      if (deviceType === 'mobile' || deviceType === 'tablet') {
+        router.push('/mobile/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
     } else {
       error.value = 'Access denied. You are not registered as an admin.';
     }

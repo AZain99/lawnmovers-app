@@ -203,4 +203,83 @@ defineProps(['isCollapsed']);
 .sidebar.collapsed .brand-name {
   display: none;
 }
+
+/* Mobile Specific Styles */
+@media (max-width: 920px) {
+  .sidebar {
+    width: 72px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: auto;
+    overflow-y: auto;
+    z-index: 1100;
+    background: #1a252f;
+    box-shadow: 0 0 16px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+  }
+
+  .sidebar-header {
+    justify-content: center;
+    width: 100%;
+    height: 72px;
+    padding: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .sidebar-nav {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px 0;
+    gap: 4px;
+  }
+
+  .logo-wrapper {
+    display: flex;
+    width: 42px;
+    height: 42px;
+  }
+
+  .nav-section,
+  .brand-name,
+  .label {
+    display: none;
+  }
+
+  .nav-item {
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px 0;
+  }
+
+  .nav-spacer {
+    display: none;
+  }
+}
+
+/* Ensure collapsed state does not force a narrow vertical bar on mobile */
+@media (max-width: 920px) {
+  .sidebar.collapsed {
+    width: 72px;
+    max-height: none;
+  }
+
+  .sidebar.collapsed .nav-item {
+    width: 52px;
+    height: 52px;
+    padding: 0;
+  }
+}
 </style>

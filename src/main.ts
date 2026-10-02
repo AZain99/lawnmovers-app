@@ -9,29 +9,37 @@ import { onAuthStateChanged } from 'firebase/auth';
 
 // Global Styles
 import './assets/styles.css';
+import './assets/mobile-styles.css';
 
-let app: any;
+const clickOutsideDirective = {
+  beforeMount(el: any, binding: any) {
+    const handler = (event: Event) => {
+      if (!el.contains(event.target)) {
+        binding.value(event);
+      }
+    };
+    el.__clickOutside__ = handler;
+    document.addEventListener('click', handler);
+  },
+  unmounted(el: any) {
+    document.removeEventListener('click', el.__clickOutside__);
+  },
+};
 
-/**
- * We wrap the app mount in an Auth observer. 
- * This ensures that if a user refreshes the page, 
- * Firebase restores their session before the router tries to protect a page.
- */
+const app = createApp(App);
+
+app.directive('click-outside', clickOutsideDirective);
+app.use(createPinia());
+app.use(router);
+
 onAuthStateChanged(auth, (user) => {
-  if (!app) {
-    app = createApp(App);
-
-    app.use(createPinia());
-    app.use(router);
-
-    app.mount('#app');
-    
-    console.log("Vue App Mounted");
-  }
-
   if (user) {
-    console.log("Admin is logged in:", user.email);
+    console.log('Admin is logged in:', user.email);
   } else {
-    console.log("No active session.");
+    console.log('No active session.');
   }
 });
+
+app.mount('#app');
+
+console.log("Vue App Mounted");

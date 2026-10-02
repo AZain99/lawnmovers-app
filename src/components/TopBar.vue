@@ -281,4 +281,49 @@ onMounted(async () => {
 .logout:hover { background: #fff5f5 !important; }
 
 hr { border: 0; border-top: 1px solid #edf2f7; margin: 5px 0; }
+
+@media (max-width: 920px) {
+  .topbar {
+    height: auto;
+    padding: 12px 14px;
+    gap: 12px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 120;
+  }
+
+  .topbar-left,
+  .topbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .search-box {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .search-box input {
+    width: 100%;
+    max-width: none;
+  }
+
+  .admin-info {
+    display: none;
+  }
+
+  .notification-wrapper {
+    width: 36px;
+    height: 36px;
+  }
+
+  .profile-container {
+    margin-left: auto;
+  }
+
+  .dropdown-panel {
+    z-index: 200;
+  }
+}
 </style>
